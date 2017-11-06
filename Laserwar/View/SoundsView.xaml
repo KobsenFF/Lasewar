@@ -1,0 +1,110 @@
+﻿<UserControl x:Class="Laserwar.View.SoundsView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:Laserwar.View"
+             mc:Ignorable="d" 
+             d:DesignHeight="600" d:DesignWidth="800">
+    <Grid Background="White">
+        <Label Content="ЗВУКИ" FontSize="26" FontWeight="Bold" Grid.Column="1"  HorizontalContentAlignment="Left" HorizontalAlignment="Left" Margin="40,55,0,0" VerticalAlignment="Top"/>
+        <DataGrid x:Name="soundsGrid"  Background="Transparent" BorderThickness="0" BorderBrush="Transparent" GridLinesVisibility="Horizontal" HorizontalGridLinesBrush="LightGray" VerticalContentAlignment="Bottom" AutoGenerateColumns="False" HorizontalAlignment="Left" Height="450" Margin="40,105,0,0" VerticalAlignment="Top" Width="720" Loaded="gridSounds_Loaded" CanUserReorderColumns="False" CanUserResizeColumns="False" CanUserResizeRows="False" HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Hidden" RowHeight="30" FontSize="14" RowDetailsVisibilityMode="Collapsed" EnableRowVirtualization="False" HeadersVisibility="Column">
+            <DataGrid.CellStyle>
+                <Style TargetType="DataGridCell">
+                    <Style.Triggers>
+                        <Trigger Property="IsSelected"
+                        Value="True">
+                            <Setter Property="Background"
+                        Value="Transparent" />
+                            <Setter Property="Foreground"
+                        Value="Black" />
+                            <Setter Property="BorderThickness"
+                        Value="0" />
+                        </Trigger>
+                    </Style.Triggers>
+                </Style>
+            </DataGrid.CellStyle>
+            <DataGrid.RowStyle>
+                <Style TargetType="DataGridRow">
+                    <Style.Triggers>
+                        <Trigger Property="IsSelected"
+                        Value="False">
+                            <Setter Property="BorderBrush"
+                        Value="Transparent" />
+                            <Setter Property="BorderThickness"
+                        Value="0" />
+                        </Trigger>
+                    </Style.Triggers>
+                </Style>
+            </DataGrid.RowStyle>
+            <DataGrid.ColumnHeaderStyle>
+                <Style TargetType="DataGridColumnHeader">
+                    <Setter Property="FontWeight" Value="Bold" />
+                    <Setter Property="HorizontalContentAlignment" Value="Left"/>
+                    <Setter Property="VerticalContentAlignment" Value="Top"/>
+                    <Setter Property="Background" Value="Transparent"/>
+                    <Setter Property="Height" Value="30"/>
+                    <Setter Property="FontSize" Value="16"/>
+                </Style>
+            </DataGrid.ColumnHeaderStyle>
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="Имя файла" Binding="{Binding Path=Name}" IsReadOnly="True" Width="250"/>
+                <DataGridTextColumn Header="Размер файла" Binding="{Binding Path=Size}" IsReadOnly="True" Width="150" />
+                <DataGridTemplateColumn Header="Загрузка файла"  IsReadOnly="True" Width="150">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <Button x:Name="DownloadSound" BorderThickness="0"  HorizontalAlignment="Left"  VerticalAlignment="Center" Width="15" Height="15" BorderBrush="Transparent">
+                                <Button.Style>
+                                    <Style TargetType="{x:Type Button}">
+                                        <Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.ControlTextBrushKey}}"/>
+                                        <Setter Property="Padding" Value="2"/>
+                                        <Setter Property="BorderThickness" Value="1"/>
+                                        <Setter Property="Background" Value="Transparent"/>
+                                        <Setter Property="BorderBrush" Value="Transparent"/>
+                                        <Setter Property="HorizontalAlignment" Value="Center"/>
+                                        <Setter Property="VerticalAlignment" Value="Center"/>
+                                        <Setter Property="HorizontalContentAlignment" Value="Center"/>
+                                        <Setter Property="VerticalContentAlignment" Value="Center"/>
+                                        <Setter Property="Template">
+                                            <Setter.Value>
+                                                <ControlTemplate TargetType="{x:Type Button}">
+                                                    <Border x:Name="Bd" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" Background="{TemplateBinding Background}" Padding="{TemplateBinding Padding}" SnapsToDevicePixels="True">
+                                                        <ContentPresenter ContentTemplate="{TemplateBinding ContentTemplate}" Content="{TemplateBinding Content}" ContentStringFormat="{TemplateBinding ContentStringFormat}" HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
+                                                    </Border>
+                                                    <ControlTemplate.Triggers>
+                                                        <Trigger Property="IsMouseOver" Value="True">
+                                                            <Setter Property="BorderBrush" TargetName="Bd" Value="Transparent"/>
+                                                            <Setter Property="Background" TargetName="Bd" Value="Transparent"/>
+                                                        </Trigger>
+                                                        <Trigger Property="IsKeyboardFocused" Value="True">
+                                                            <Setter Property="BorderBrush" TargetName="Bd" Value="Transparent"/>
+                                                            <Setter Property="Background" TargetName="Bd" Value="Transparent"/>
+                                                        </Trigger>
+                                                        <Trigger Property="IsPressed" Value="True">
+                                                            <Setter Property="BorderBrush" TargetName="Bd" Value="Transparent"/>
+                                                            <Setter Property="Background" TargetName="Bd" Value="Transparent"/>
+                                                        </Trigger>
+                                                        <Trigger Property="IsEnabled" Value="False">
+                                                            <Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.GrayTextBrushKey}}"/>
+                                                            <Setter Property="Background" TargetName="Bd" Value="#0000FF"/>
+                                                        </Trigger>
+                                                    </ControlTemplate.Triggers>
+                                                </ControlTemplate>
+                                            </Setter.Value>
+                                        </Setter>
+                                    </Style>
+                                </Button.Style>
+                                <StackPanel>
+                                    <Image Source="C:\Users\Константин\source\repos\Laserwar\Laserwar\Resourses\Images\download_sound.png" Stretch="Uniform" />
+                                </StackPanel>
+                            </Button>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+                
+                <DataGridTextColumn Header="Воспроизвести" IsReadOnly="True" Width="150" />
+            </DataGrid.Columns>
+        </DataGrid>
+
+    </Grid>
+</UserControl>

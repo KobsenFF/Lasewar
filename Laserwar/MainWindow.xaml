@@ -4,9 +4,174 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Laserwar"
+        xmlns:viewmodels="clr-namespace:Laserwar.ViewModel"
+        xmlns:views="clr-namespace:Laserwar.View"
         mc:Ignorable="d"
-        Title="MainWindow" Height="350" Width="525">
-    <Grid>
-        
+        Title="Laserwar" Height="600" Width="900"
+        ResizeMode="NoResize">
+
+    <Window.Resources>
+        <DataTemplate x:Name="DownloadViewTemplate" DataType="{x:Type viewmodels:DownloadViewModel}">
+            <views:DownloadView DataContext="{Binding}"/>
+        </DataTemplate>
+
+        <DataTemplate x:Name="SoundsViewTemplate" DataType="{x:Type viewmodels:SoundsViewModel}">
+            <views:SoundsView DataContext="{Binding}"/>
+        </DataTemplate>
+
+        <DataTemplate x:Name="GameViewTemplate" DataType="{x:Type viewmodels:GameViewModel}">
+            <views:GameView DataContext="{Binding}"/>
+        </DataTemplate>
+    </Window.Resources>
+
+    <Grid >
+        <Grid.ColumnDefinitions >
+            <ColumnDefinition  x:Name="LeftPanel" Width="100" />
+            <ColumnDefinition x:Name="MainPanel" Width="800"/>
+        </Grid.ColumnDefinitions>
+        <Border Grid.Row="0" Grid.Column="0" Background="#373b3c" />
+
+        <Button x:Name="Download" BorderThickness="0"  HorizontalAlignment="Center" Margin="0,135,0,335" VerticalAlignment="Center" Width="100" Height="100" BorderBrush="Transparent"  Click="DownloadView_Clicked" >
+            <Button.Style>
+                <Style TargetType="{x:Type Button}">
+                    <Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.ControlTextBrushKey}}"/>
+                    <Setter Property="Padding" Value="2"/>
+                    <Setter Property="BorderThickness" Value="1"/>
+                    <Setter Property="Background" Value="Transparent"/>
+                    <Setter Property="BorderBrush" Value="Transparent"/>
+                    <Setter Property="HorizontalAlignment" Value="Center"/>
+                    <Setter Property="VerticalAlignment" Value="Center"/>
+                    <Setter Property="HorizontalContentAlignment" Value="Center"/>
+                    <Setter Property="VerticalContentAlignment" Value="Center"/>
+                    <Setter Property="Template">
+                        <Setter.Value>
+                            <ControlTemplate TargetType="{x:Type Button}">
+                                <Border x:Name="Bd" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" Background="{TemplateBinding Background}" Padding="{TemplateBinding Padding}" SnapsToDevicePixels="True">
+                                    <ContentPresenter ContentTemplate="{TemplateBinding ContentTemplate}" Content="{TemplateBinding Content}" ContentStringFormat="{TemplateBinding ContentStringFormat}" HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
+                                </Border>
+                                <ControlTemplate.Triggers>
+                                    <Trigger Property="IsMouseOver" Value="True">
+                                        <Setter Property="BorderBrush" TargetName="Bd" Value="#FF3399FF"/>
+                                        <Setter Property="Background" TargetName="Bd" Value="#0000FF"/>
+                                    </Trigger>
+                                    <Trigger Property="IsKeyboardFocused" Value="True">
+                                        <Setter Property="BorderBrush" TargetName="Bd" Value="#FF3399FF"/>
+                                        <Setter Property="Background" TargetName="Bd" Value="#0000FF"/>
+                                    </Trigger>
+                                    <Trigger Property="IsPressed" Value="True">
+                                        <Setter Property="BorderBrush" TargetName="Bd" Value="#FF3399FF"/>
+                                        <Setter Property="Background" TargetName="Bd" Value="#0000FF"/>
+                                    </Trigger>
+                                    <Trigger Property="IsEnabled" Value="False">
+                                        <Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.GrayTextBrushKey}}"/>
+                                        <Setter Property="Background" TargetName="Bd" Value="#0000FF"/>
+                                    </Trigger>
+                                </ControlTemplate.Triggers>
+                            </ControlTemplate>
+                        </Setter.Value>
+                    </Setter>
+                </Style>
+            </Button.Style>
+            <StackPanel>
+                <Image Source="Resourses/Images/download.png" Stretch="None" />
+            </StackPanel>
+        </Button>
+        <Button x:Name="Sounds" BorderThickness="0" HorizontalAlignment="Center" Margin="0,0,0,0" VerticalAlignment="Center" Width="100" Height="100" Background="Transparent" BorderBrush="Transparent" Click="SoundsView_Clicked">
+            <Button.Style>
+                <Style TargetType="{x:Type Button}">
+                    <Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.ControlTextBrushKey}}"/>
+                    <Setter Property="Padding" Value="2"/>
+                    <Setter Property="BorderThickness" Value="1"/>
+                    <Setter Property="Background" Value="Transparent"/>
+                    <Setter Property="BorderBrush" Value="Transparent"/>
+                    <Setter Property="HorizontalAlignment" Value="Center"/>
+                    <Setter Property="VerticalAlignment" Value="Center"/>
+                    <Setter Property="HorizontalContentAlignment" Value="Center"/>
+                    <Setter Property="VerticalContentAlignment" Value="Center"/>
+                    <Setter Property="Template">
+                        <Setter.Value>
+                            <ControlTemplate TargetType="{x:Type Button}">
+                                <Border x:Name="Bd" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" Background="{TemplateBinding Background}" Padding="{TemplateBinding Padding}" SnapsToDevicePixels="True">
+                                    <ContentPresenter ContentTemplate="{TemplateBinding ContentTemplate}" Content="{TemplateBinding Content}" ContentStringFormat="{TemplateBinding ContentStringFormat}" HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
+                                </Border>
+                                <ControlTemplate.Triggers>
+                                    <Trigger Property="IsMouseOver" Value="True">
+                                        <Setter Property="BorderBrush" TargetName="Bd" Value="#FF3399FF"/>
+                                        <Setter Property="Background" TargetName="Bd" Value="#0000FF"/>
+                                    </Trigger>
+                                    <Trigger Property="IsKeyboardFocused" Value="True">
+                                        <Setter Property="BorderBrush" TargetName="Bd" Value="#FF3399FF"/>
+                                        <Setter Property="Background" TargetName="Bd" Value="#0000FF"/>
+                                    </Trigger>
+                                    <Trigger Property="IsPressed" Value="True">
+                                        <Setter Property="BorderBrush" TargetName="Bd" Value="#FF3399FF"/>
+                                        <Setter Property="Background" TargetName="Bd" Value="#0000FF"/>
+                                    </Trigger>
+                                    <Trigger Property="IsEnabled" Value="False">
+                                        <Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.GrayTextBrushKey}}"/>
+                                        <Setter Property="Background" TargetName="Bd" Value="#0000FF"/>
+                                    </Trigger>
+                                </ControlTemplate.Triggers>
+                            </ControlTemplate>
+                        </Setter.Value>
+                    </Setter>
+                </Style>
+            </Button.Style>
+            <StackPanel>
+                <Image Source="Resourses/Images/sounds.png" Stretch="None" />
+            </StackPanel>
+        </Button>
+        <Button x:Name="Game" BorderThickness="0" HorizontalAlignment="Center" Margin="0,335,0,135" VerticalAlignment="Center" Width="100" Height="100" Background="Transparent" BorderBrush="Transparent" Click="GameView_Clicked">
+            <Button.Style>
+                <Style TargetType="{x:Type Button}">
+                    <Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.ControlTextBrushKey}}"/>
+                    <Setter Property="Padding" Value="2"/>
+                    <Setter Property="BorderThickness" Value="1"/>
+                    <Setter Property="Background" Value="Transparent"/>
+                    <Setter Property="BorderBrush" Value="Transparent"/>
+                    <Setter Property="HorizontalAlignment" Value="Center"/>
+                    <Setter Property="VerticalAlignment" Value="Center"/>
+                    <Setter Property="HorizontalContentAlignment" Value="Center"/>
+                    <Setter Property="VerticalContentAlignment" Value="Center"/>
+                    <Setter Property="Template">
+                        <Setter.Value>
+                            <ControlTemplate TargetType="{x:Type Button}">
+                                <Border x:Name="Bd" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" Background="{TemplateBinding Background}" Padding="{TemplateBinding Padding}" SnapsToDevicePixels="True">
+                                    <ContentPresenter ContentTemplate="{TemplateBinding ContentTemplate}" Content="{TemplateBinding Content}" ContentStringFormat="{TemplateBinding ContentStringFormat}" HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
+                                </Border>
+                                <ControlTemplate.Triggers>
+                                    <Trigger Property="IsMouseOver" Value="True">
+                                        <Setter Property="BorderBrush" TargetName="Bd" Value="#FF3399FF"/>
+                                        <Setter Property="Background" TargetName="Bd" Value="#0000FF"/>
+                                    </Trigger>
+                                    <Trigger Property="IsKeyboardFocused" Value="True">
+                                        <Setter Property="BorderBrush" TargetName="Bd" Value="#FF3399FF"/>
+                                        <Setter Property="Background" TargetName="Bd" Value="#0000FF"/>
+                                    </Trigger>
+                                    <Trigger Property="IsPressed" Value="True">
+                                        <Setter Property="BorderBrush" TargetName="Bd" Value="#FF3399FF"/>
+                                        <Setter Property="Background" TargetName="Bd" Value="#0000FF"/>
+                                    </Trigger>
+                                    <Trigger Property="IsEnabled" Value="False">
+                                        <Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.GrayTextBrushKey}}"/>
+                                        <Setter Property="Background" TargetName="Bd" Value="#0000FF"/>
+                                    </Trigger>
+                                </ControlTemplate.Triggers>
+                            </ControlTemplate>
+                        </Setter.Value>
+                    </Setter>
+                </Style>
+            </Button.Style>
+            <StackPanel>
+                <Image Source="Resourses/Images/games.png" Stretch="None" />
+            </StackPanel>
+        </Button>
+        <Frame
+            Grid.Column="1"
+            Content="{Binding CurrentPage}"
+            NavigationUIVisibility="Hidden"
+            Opacity="{Binding FrameOpacity}" />
+
+        <ContentControl Grid.Row="0" Grid.Column="1" Content="{Binding}"/>
     </Grid>
 </Window>
