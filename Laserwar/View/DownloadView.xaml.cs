@@ -40,6 +40,10 @@ namespace Laserwar.View
                     Database database = new Database();
 
                     JArray array = (JArray)o["sounds"];
+                    if(array.Count > 0)
+                    {
+                        database.clearTableSounds();
+                    }
                     Console.WriteLine(array.Count);
                    
                     for (int i=0;i<array.Count;i++)
@@ -47,14 +51,25 @@ namespace Laserwar.View
                         var name = (string)array[i]["name"];
                         var url = (string)array[i]["url"];
                         var size = (string)array[i]["size"];
-                        database.Add(name, url, size);
+                        database.AddSound(name, url, size);
                     }
-                    
+
+                    JArray arrayGames = (JArray)o["games"];
+                    for (int i = 0; i < array.Count; i++)
+                    {
+                        var url = (string)array[i]["url"];
+                        data = c.DownloadString(url);
+                        JObject g = JObject.Parse(data);
+                        if (g != null)
+                        {
+                            var NameGame = g["name"].ToString();
+                            var DateGame = g["date"].ToString();
+                        }
+                    }
 
 
-                 
-                    
-                    
+
+
                 }
             }
 

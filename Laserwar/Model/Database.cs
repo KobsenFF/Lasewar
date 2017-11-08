@@ -19,6 +19,7 @@ namespace Laserwar.Model
             sqliteCon = new SQLiteConnection(@"Data Source=test.db");
             createDB();
             createTableSounds();
+            createTableGames();
         }
 
         public void createDB()
@@ -44,7 +45,33 @@ namespace Laserwar.Model
                     ");", sqliteCon).ExecuteNonQuery();
         }
 
-        public bool Add(string name, string url, string size)
+        public void createTableGames()
+        {
+            openConnection();
+
+            new SQLiteCommand("CREATE TABLE IF NOT EXISTS Games(" + string.Join(", ",
+                    "Id INTEGER  PRIMARY KEY AUTOINCREMENT",
+                    "Name TEXT NOT NULL",
+                    "Date TEXT NOT NULL",
+                    "TeamName TEXT NOT NULL",
+                    "PlayerName TEXT NOT NULL",
+                    "Rating INTEGER NOT NULL",
+                    "Accuracy REAL NOT NULL",
+                    "Shots INTEGER NOT NULL"
+                    ) +
+                    ");", sqliteCon).ExecuteNonQuery();
+        }
+
+        public void clearTableSounds()
+        {
+            openConnection();
+
+            new SQLiteCommand("DELETE FROM sounds", sqliteCon).ExecuteNonQuery();
+
+            closeConnection();
+        }
+
+        public bool AddSound(string name, string url, string size)
         {
             try
             {

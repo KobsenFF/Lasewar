@@ -7,7 +7,7 @@
              mc:Ignorable="d" 
              d:DesignHeight="600" d:DesignWidth="800">
     <Grid Background="White">
-        <Label Content="ЗВУКИ" FontSize="26" FontWeight="Bold" Grid.Column="1"  HorizontalContentAlignment="Left" HorizontalAlignment="Left" Margin="40,55,0,0" VerticalAlignment="Top"/>
+        <Label x:Name="SoundLabel" Content="ЗВУКИ" FontSize="26" FontWeight="Bold" Grid.Column="1"  HorizontalContentAlignment="Left" HorizontalAlignment="Left" Margin="40,55,0,0" VerticalAlignment="Top"/>
         <DataGrid x:Name="soundsGrid"  Background="Transparent" BorderThickness="0" BorderBrush="Transparent" GridLinesVisibility="Horizontal" HorizontalGridLinesBrush="LightGray" VerticalContentAlignment="Bottom" AutoGenerateColumns="False" HorizontalAlignment="Left" Height="450" Margin="40,105,0,0" VerticalAlignment="Top" Width="720" Loaded="gridSounds_Loaded" CanUserReorderColumns="False" CanUserResizeColumns="False" CanUserResizeRows="False" HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Hidden" RowHeight="30" FontSize="14" RowDetailsVisibilityMode="Collapsed" EnableRowVirtualization="False" HeadersVisibility="Column">
             <DataGrid.CellStyle>
                 <Style TargetType="DataGridCell">
@@ -26,13 +26,11 @@
             </DataGrid.CellStyle>
             <DataGrid.RowStyle>
                 <Style TargetType="DataGridRow">
+                    <Setter Property="Height" Value="40"/>
                     <Style.Triggers>
-                        <Trigger Property="IsSelected"
-                        Value="False">
-                            <Setter Property="BorderBrush"
-                        Value="Transparent" />
-                            <Setter Property="BorderThickness"
-                        Value="0" />
+                        <Trigger Property="IsSelected" Value="False">
+                            <Setter Property="BorderBrush" Value="Transparent" />
+                            <Setter Property="BorderThickness" Value="0" />
                         </Trigger>
                     </Style.Triggers>
                 </Style>
@@ -48,12 +46,15 @@
                 </Style>
             </DataGrid.ColumnHeaderStyle>
             <DataGrid.Columns>
-                <DataGridTextColumn Header="Имя файла" Binding="{Binding Path=Name}" IsReadOnly="True" Width="250"/>
+                <DataGridTextColumn Header="Имя файла" Binding="{Binding Path=Name}" IsReadOnly="True" Width="250">
+                    
+                </DataGridTextColumn>
                 <DataGridTextColumn Header="Размер файла" Binding="{Binding Path=Size}" IsReadOnly="True" Width="150" />
                 <DataGridTemplateColumn Header="Загрузка файла"  IsReadOnly="True" Width="150">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
-                            <Button x:Name="DownloadSound" BorderThickness="0"  HorizontalAlignment="Left"  VerticalAlignment="Center" Width="15" Height="15" BorderBrush="Transparent">
+                            <StackPanel Orientation="Horizontal">
+                            <Button x:Name="DownloadSound" BorderThickness="0"  HorizontalAlignment="Left"  VerticalAlignment="Center" Width="15" Height="15" BorderBrush="Transparent" Click="DownloadSound_Click">
                                 <Button.Style>
                                     <Style TargetType="{x:Type Button}">
                                         <Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.ControlTextBrushKey}}"/>
@@ -85,8 +86,8 @@
                                                             <Setter Property="Background" TargetName="Bd" Value="Transparent"/>
                                                         </Trigger>
                                                         <Trigger Property="IsEnabled" Value="False">
-                                                            <Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.GrayTextBrushKey}}"/>
-                                                            <Setter Property="Background" TargetName="Bd" Value="#0000FF"/>
+                                                                <Setter Property="Foreground" Value="Transparent"/>
+                                                                <Setter Property="Background" TargetName="Bd" Value="Transparent"/>
                                                         </Trigger>
                                                     </ControlTemplate.Triggers>
                                                 </ControlTemplate>
@@ -95,14 +96,77 @@
                                     </Style>
                                 </Button.Style>
                                 <StackPanel>
-                                    <Image Source="C:\Users\Константин\source\repos\Laserwar\Laserwar\Resourses\Images\download_sound.png" Stretch="Uniform" />
+                                    <Image x:Name="downloadImage" Source="C:\Users\Константин\source\repos\Laserwar\Laserwar\Resourses\Images\download_sound.png" Stretch="Uniform" Loaded="DownloadImage_Loaded" />
                                 </StackPanel>
                             </Button>
+                                <TextBlock x:Name="DownloadLabel" Text="Файл загружен" Margin="10,0,0,0" Foreground="Black" Visibility="Hidden" FontSize="12" VerticalAlignment="Center">
+                                </TextBlock>
+                                <ProgressBar x:Name="DownloadProgressBar" Margin="10,0,0,3" Height="5" Width="100" Visibility="Collapsed" Background="LightGray" Foreground="Blue" BorderBrush="Blue" VerticalAlignment="Bottom">
+                            </ProgressBar>
+                            
+                            </StackPanel>
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
-                
-                <DataGridTextColumn Header="Воспроизвести" IsReadOnly="True" Width="150" />
+
+                <DataGridTemplateColumn Header="Воспроизвести" IsReadOnly="True" Width="150" >
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <StackPanel Orientation="Horizontal">
+                                <Button x:Name="PlaySound" BorderThickness="0"  HorizontalAlignment="Left"  VerticalAlignment="Center" Width="12" Height="14" BorderBrush="Transparent" Click="PlaySound_Click" IsEnabled="False">
+                                    <Button.Style>
+                                        <Style TargetType="{x:Type Button}">
+                                            <Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.ControlTextBrushKey}}"/>
+                                            <Setter Property="Padding" Value="2"/>
+                                            <Setter Property="BorderThickness" Value="1"/>
+                                            <Setter Property="Background" Value="Transparent"/>
+                                            <Setter Property="BorderBrush" Value="Transparent"/>
+                                            <Setter Property="HorizontalAlignment" Value="Center"/>
+                                            <Setter Property="VerticalAlignment" Value="Center"/>
+                                            <Setter Property="HorizontalContentAlignment" Value="Center"/>
+                                            <Setter Property="VerticalContentAlignment" Value="Center"/>
+                                            <Setter Property="Template">
+                                                <Setter.Value>
+                                                    <ControlTemplate TargetType="{x:Type Button}">
+                                                        <Border x:Name="Bd" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" Background="{TemplateBinding Background}" Padding="{TemplateBinding Padding}" SnapsToDevicePixels="True">
+                                                            <ContentPresenter ContentTemplate="{TemplateBinding ContentTemplate}" Content="{TemplateBinding Content}" ContentStringFormat="{TemplateBinding ContentStringFormat}" HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
+                                                        </Border>
+                                                        <ControlTemplate.Triggers>
+                                                            <Trigger Property="IsMouseOver" Value="True">
+                                                                <Setter Property="BorderBrush" TargetName="Bd" Value="Transparent"/>
+                                                                <Setter Property="Background" TargetName="Bd" Value="Transparent"/>
+                                                            </Trigger>
+                                                            <Trigger Property="IsKeyboardFocused" Value="True">
+                                                                <Setter Property="BorderBrush" TargetName="Bd" Value="Transparent"/>
+                                                                <Setter Property="Background" TargetName="Bd" Value="Transparent"/>
+                                                            </Trigger>
+                                                            <Trigger Property="IsPressed" Value="True">
+                                                                <Setter Property="BorderBrush" TargetName="Bd" Value="Transparent"/>
+                                                                <Setter Property="Background" TargetName="Bd" Value="Transparent"/>
+                                                            </Trigger>
+                                                            <Trigger Property="IsEnabled" Value="False">
+                                                                <Setter Property="Foreground" Value="Transparent"/>
+                                                                <Setter Property="Background" TargetName="Bd" Value="Transparent"/>
+                                                            </Trigger>
+                                                        </ControlTemplate.Triggers>
+                                                    </ControlTemplate>
+                                                </Setter.Value>
+                                            </Setter>
+                                        </Style>
+                                    </Button.Style>
+                                    <StackPanel>
+                                        <Image x:Name="PlayImage" Source="C:\Users\Константин\source\repos\Laserwar\Laserwar\Resourses\Images\play_disabled.png" Stretch="UniformToFill" />
+                                    </StackPanel>
+                                </Button>
+                                <StackPanel Orientation="Vertical">
+                                    <Label x:Name="ProgressStatus" Margin="10,0,0,0" Visibility="Collapsed" VerticalAlignment="Top" FontSize="9"/>
+                                    <ProgressBar x:Name="PlayProgressBar" Margin="10,0,0,7" Height="5" Width="100" Visibility="Collapsed" Background="LightGray" Foreground="Blue" BorderBrush="Blue" VerticalAlignment="Bottom">
+                                    </ProgressBar>
+                                </StackPanel>
+                            </StackPanel>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
             </DataGrid.Columns>
         </DataGrid>
 
