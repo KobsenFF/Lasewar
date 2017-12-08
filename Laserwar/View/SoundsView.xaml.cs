@@ -1,27 +1,15 @@
-﻿using System;
+﻿using Laserwar.Model;
+using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.ComponentModel;
+using System.Data.SQLite;
+using System.IO;
+using System.Net;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
+using System.Windows.Controls.Primitives;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
-using Laserwar.Model;
-using System.Data.SQLite;
-using System.Net;
-using System.ComponentModel;
-using System.IO;
-using System.Data;
-using System.Data.Common;
-using System.Xaml;
-using System.Windows.Controls.Primitives;
-using System.Media;
 using System.Windows.Threading;
 
 namespace Laserwar.View
@@ -29,7 +17,7 @@ namespace Laserwar.View
     /// <summary>
     /// Логика взаимодействия для SoundsView.xaml
     /// </summary>
-    public partial class SoundsView : UserControl
+    public partial class SoundsView : Page
     {
         string soundName = String.Empty;
         List<Sounds> sounds = new List<Sounds>(3);
@@ -40,7 +28,7 @@ namespace Laserwar.View
             InitializeComponent();
         }
 
-        
+
 
         private void gridSounds_Loaded(object sender, RoutedEventArgs e)
         {
@@ -49,7 +37,7 @@ namespace Laserwar.View
 
             string sqlCommand = "SELECT Name, Url, Size FROM sounds";
             SQLiteCommand cmd = new SQLiteCommand(sqlCommand, database.sqliteCon);
-            
+
             try
             {
                 SQLiteDataReader r = cmd.ExecuteReader();
@@ -61,7 +49,7 @@ namespace Laserwar.View
                     Name = r["Name"].ToString();
                     Url = r["Url"].ToString();
                     Size = r["Size"].ToString();
-                    Size = (Convert.ToInt32(Size)/1024) + "Kb";
+                    Size = (Convert.ToInt32(Size) / 1024) + "Kb";
                     sounds.Add(new Sounds(Name, Url, Size));
                 }
                 r.Close();
@@ -71,43 +59,33 @@ namespace Laserwar.View
                 Console.WriteLine(ex.Message);
             }
             soundsGrid.ItemsSource = sounds;
-            string imgPath = System.IO.Path.GetFullPath(@"Resourses/Images/downloaded_sound.png");
-            Uri uri = new Uri(imgPath);
-            BitmapImage bitmap = new BitmapImage(uri);
 
-            string imgPlayPath = System.IO.Path.GetFullPath(@"Resourses/Images/play.png");
-            Uri uriPlay = new Uri(imgPlayPath);
-            BitmapImage bitmapPlay = new BitmapImage(uriPlay);
-
-            for (int i=1;i<=soundsGrid.Items.Count;i++)
+            for (int i = 1; i <= soundsGrid.Items.Count; i++)
             {
-                soundName = GlobalDefines.GetFrameworkElement<TextBlock>(GlobalDefines.GetCell(i-1, 0, soundsGrid)).Text;
-                if (File.Exists(soundName+".wav"))
+                soundName = GlobalDefines.GetFrameworkElement<TextBlock>(GlobalDefines.GetCell(i - 1, 0, soundsGrid)).Text;
+                if (File.Exists(soundName + ".wav"))
                 {
-                    GlobalDefines.GetFrameworkElement<Image>(GlobalDefines.GetCell(i - 1, 2, soundsGrid)).Source = bitmap;
+                    InstallImageButton(@"Resourses/Images/downloaded_sound.png", GlobalDefines.GetFrameworkElement<Image>(GlobalDefines.GetCell(i - 1, 2, soundsGrid)));
                     GlobalDefines.GetFrameworkElement<Button>(GlobalDefines.GetCell(i - 1, 2, soundsGrid)).IsEnabled = false;
                     GlobalDefines.GetFrameworkElement<TextBlock>(GlobalDefines.GetCell(i - 1, 2, soundsGrid)).Visibility = Visibility.Visible;
-                    GlobalDefines.GetFrameworkElement<Image>(GlobalDefines.GetCell(i - 1, 3, soundsGrid)).Source = bitmapPlay;
+                    InstallImageButton(@"Resourses/Images/play.png", GlobalDefines.GetFrameworkElement<Image>(GlobalDefines.GetCell(i - 1, 3, soundsGrid)));
                     GlobalDefines.GetFrameworkElement<Button>(GlobalDefines.GetCell(i - 1, 3, soundsGrid)).IsEnabled = true;
                 }
             }
         }
 
-       
+
 
         private void DownloadSound_Click(object sender, RoutedEventArgs e)
         {
-            string imgPath = System.IO.Path.GetFullPath(@"Resourses/Images/downloading_sound.png");
-            Uri uri = new Uri(imgPath);
-            BitmapImage bitmap = new BitmapImage(uri);
-            GlobalDefines.GetFrameworkElement<Image>(GlobalDefines.GetCell(soundsGrid.SelectedIndex, 2, soundsGrid)).Source = bitmap;
+            InstallImageButton(@"Resourses/Images/downloading_sound.png", GlobalDefines.GetFrameworkElement<Image>(GlobalDefines.GetCell(soundsGrid.SelectedIndex, 2, soundsGrid)));
 
             string Url = String.Empty;
             string Name = String.Empty;
             int index = soundsGrid.SelectedIndex;
             Database database = new Database();
             database.openConnection();
-            string sqlCommand = "SELECT Name, Url FROM sounds WHERE Id="+(index+1);
+            string sqlCommand = "SELECT Name, Url FROM sounds WHERE Id=" + (index + 1);
             SQLiteCommand cmd = new SQLiteCommand(sqlCommand, database.sqliteCon);
             try
             {
@@ -130,7 +108,7 @@ namespace Laserwar.View
                 WebClient client = new WebClient();
                 client.DownloadProgressChanged += new DownloadProgressChangedEventHandler(client_DownloadProgressChanged);
                 client.DownloadFileCompleted += new AsyncCompletedEventHandler(client_DownloadFileCompleted);
-                client.DownloadFileAsync(new Uri(Url), fileName+".wav");
+                client.DownloadFileAsync(new Uri(Url), fileName + ".wav");
             }
         }
 
@@ -141,18 +119,10 @@ namespace Laserwar.View
             GlobalDefines.GetFrameworkElement<TextBlock>(GlobalDefines.GetCell(soundsGrid.SelectedIndex, 2, soundsGrid)).Visibility = Visibility.Visible;
             GlobalDefines.GetFrameworkElement<TextBlock>(GlobalDefines.GetCell(soundsGrid.SelectedIndex, 2, soundsGrid)).HorizontalAlignment = HorizontalAlignment.Left;
 
+            InstallImageButton(@"Resourses/Images/downloaded_sound.png", GlobalDefines.GetFrameworkElement<Image>(GlobalDefines.GetCell(soundsGrid.SelectedIndex, 2, soundsGrid)));
+            InstallImageButton(@"Resourses/Images/play.png", GlobalDefines.GetFrameworkElement<Image>(GlobalDefines.GetCell(soundsGrid.SelectedIndex, 3, soundsGrid)));
 
-            string imgPath = System.IO.Path.GetFullPath(@"Resourses/Images/downloaded_sound.png");
-            Uri uri = new Uri(imgPath);
-            BitmapImage bitmap = new BitmapImage(uri);
-
-            string imgPlayPath = System.IO.Path.GetFullPath(@"Resourses/Images/play.png");
-            Uri uriPlay = new Uri(imgPlayPath);
-            BitmapImage bitmapPlay = new BitmapImage(uriPlay);
-
-            GlobalDefines.GetFrameworkElement<Image>(GlobalDefines.GetCell(soundsGrid.SelectedIndex, 2, soundsGrid)).Source = bitmap;
             GlobalDefines.GetFrameworkElement<Button>(GlobalDefines.GetCell(soundsGrid.SelectedIndex, 2, soundsGrid)).IsEnabled = false;
-            GlobalDefines.GetFrameworkElement<Image>(GlobalDefines.GetCell(soundsGrid.SelectedIndex, 3, soundsGrid)).Source = bitmapPlay;
             GlobalDefines.GetFrameworkElement<Button>(GlobalDefines.GetCell(soundsGrid.SelectedIndex, 3, soundsGrid)).IsEnabled = true;
         }
         void client_DownloadProgressChanged(object sender, DownloadProgressChangedEventArgs e)
@@ -165,21 +135,58 @@ namespace Laserwar.View
 
         private void DownloadImage_Loaded(object sender, RoutedEventArgs e)
         {
-            
+
         }
+
+        private void InstallImageButton(string imagePath, Image image)
+        {
+            string imgPath = System.IO.Path.GetFullPath(imagePath);
+            Uri imgUri = new Uri(imgPath);
+            BitmapImage bitmap = new BitmapImage(imgUri);
+            image.Source = bitmap;
+        }
+
+        public int tempIndex = -1;
+        public bool tempStatus = true;
 
         private void PlaySound_Click(object sender, RoutedEventArgs e)
         {
+            if (tempIndex == soundsGrid.SelectedIndex && !tempStatus)
+            {
+                sp.Stop();
+                tempStatus = !tempStatus;
+                InstallImageButton(@"Resourses/Images/play.png", GlobalDefines.GetFrameworkElement<Image>(GlobalDefines.GetCell(tempIndex, 3, soundsGrid)));
+                GlobalDefines.GetFrameworkElement<ProgressBar>(GlobalDefines.GetCell(tempIndex, 3, soundsGrid)).Visibility = Visibility.Collapsed;
+                GlobalDefines.GetFrameworkElement<Label>(GlobalDefines.GetCell(tempIndex, 3, soundsGrid)).Visibility = Visibility.Collapsed;
+
+                return;
+            }
+
+            if (sp.Source != null && tempIndex >= 0)
+            {
+                InstallImageButton(@"Resourses/Images/play.png", GlobalDefines.GetFrameworkElement<Image>(GlobalDefines.GetCell(tempIndex, 3, soundsGrid)));
+                GlobalDefines.GetFrameworkElement<ProgressBar>(GlobalDefines.GetCell(tempIndex, 3, soundsGrid)).Visibility = Visibility.Hidden;
+                GlobalDefines.GetFrameworkElement<Label>(GlobalDefines.GetCell(tempIndex, 3, soundsGrid)).Visibility = Visibility.Hidden;
+
+                sp.Stop();
+            }
+
+
+
+            tempStatus = !tempStatus;
+            tempIndex = soundsGrid.SelectedIndex;
+            InstallImageButton(@"Resourses/Images/stop.png", GlobalDefines.GetFrameworkElement<Image>(GlobalDefines.GetCell(soundsGrid.SelectedIndex, 3, soundsGrid)));
+
+
+
             string sound = GlobalDefines.GetFrameworkElement<TextBlock>(GlobalDefines.GetCell(soundsGrid.SelectedIndex, 0, soundsGrid)).Text;
-            string soundPath = System.IO.Path.GetFullPath(sound+".wav");
+            string soundPath = System.IO.Path.GetFullPath(sound + ".wav");
             Uri uri = new Uri(soundPath);
             sp.Open(uri);
-
-            
-            
             sp.Play();
 
-            
+            GlobalDefines.GetFrameworkElement<ProgressBar>(GlobalDefines.GetCell(soundsGrid.SelectedIndex, 3, soundsGrid)).Visibility = Visibility.Visible;
+            GlobalDefines.GetFrameworkElement<Label>(GlobalDefines.GetCell(soundsGrid.SelectedIndex, 3, soundsGrid)).Visibility = Visibility.Visible;
 
             DispatcherTimer timer = new DispatcherTimer();
             timer.Interval = TimeSpan.FromSeconds(1);
@@ -192,8 +199,6 @@ namespace Laserwar.View
 
             if ((sp.Source != null) && (sp.NaturalDuration.HasTimeSpan))
             {
-                GlobalDefines.GetFrameworkElement<ProgressBar>(GlobalDefines.GetCell(soundsGrid.SelectedIndex, 3, soundsGrid)).Visibility = Visibility.Visible;
-                GlobalDefines.GetFrameworkElement<Label>(GlobalDefines.GetCell(soundsGrid.SelectedIndex, 3, soundsGrid)).Visibility = Visibility.Visible;
                 GlobalDefines.GetFrameworkElement<ProgressBar>(GlobalDefines.GetCell(soundsGrid.SelectedIndex, 3, soundsGrid)).Minimum = 0;
                 GlobalDefines.GetFrameworkElement<ProgressBar>(GlobalDefines.GetCell(soundsGrid.SelectedIndex, 3, soundsGrid)).Maximum = sp.NaturalDuration.TimeSpan.TotalSeconds;
                 GlobalDefines.GetFrameworkElement<ProgressBar>(GlobalDefines.GetCell(soundsGrid.SelectedIndex, 3, soundsGrid)).Value = sp.Position.TotalSeconds;
@@ -201,13 +206,14 @@ namespace Laserwar.View
 
                 if (sp.Position.TotalSeconds >= sp.NaturalDuration.TimeSpan.TotalSeconds)
                 {
+                    InstallImageButton(@"Resourses/Images/play.png", GlobalDefines.GetFrameworkElement<Image>(GlobalDefines.GetCell(soundsGrid.SelectedIndex, 3, soundsGrid)));
                     GlobalDefines.GetFrameworkElement<ProgressBar>(GlobalDefines.GetCell(soundsGrid.SelectedIndex, 3, soundsGrid)).Visibility = Visibility.Hidden;
                     GlobalDefines.GetFrameworkElement<Label>(GlobalDefines.GetCell(soundsGrid.SelectedIndex, 3, soundsGrid)).Visibility = Visibility.Hidden;
                 }
             }
         }
     }
-    
+
 
     static public class GlobalDefines
     {
